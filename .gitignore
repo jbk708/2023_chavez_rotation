@@ -1,3 +1,7 @@
+#Folders to ignore
+/data
+/anno
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
