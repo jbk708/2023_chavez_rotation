@@ -1,0 +1,7 @@
+name: expression_analysis
+dependencies:
+  - python=3.11
+  - pytest
+  - pylint
+  - yapf
+  - pandas

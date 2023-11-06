@@ -1,0 +1,11 @@
+[MASTER]
+extension-pkg-whitelist=
+
+[FORMAT]
+max-line-length=127
+
+[BASIC]
+good-names=i,j,k,ex,Run,_
+
+[MISCELLANEOUS]
+notes=FIXME,XXX,TODO
