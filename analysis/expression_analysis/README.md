@@ -9,6 +9,6 @@ pylint ./expression_analysis
 
 For formatting, run yapf:
 ```
-apf --in-place --recursive ./expression_analysis
+yapf --in-place --recursive ./expression_analysis
 
 ```
