@@ -30,7 +30,8 @@ class GeneExpressionAnalyzer:
             pd.DataFrame: A DataFrame containing the subset within the given coordinates.
         """
         # Validation checks for chromosome, start, and end can be added here.
-        subset = self.gene_data[(self.gene_data['seqname'] == chromosome) & (self.gene_data['start'] >= start) & (self.gene_data['end'] <= end)]
+        subset = self.gene_data[(self.gene_data['seqname'] == chromosome) & (self.gene_data['start'] >= start) &
+                                (self.gene_data['end'] <= end)]
         return subset
 
     def subset_by_range(self, coordinate_ranges, padding_left=0, padding_right=0):
