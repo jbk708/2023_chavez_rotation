@@ -74,7 +74,7 @@ class GeneExpressionAnalyzer:
             self.gene_data['population_mean'] = expression_data.mean(axis=1)
         except KeyError:
             raise ValueError("Expected 'seqname' column not found in data.")
-
+    
     def compare_sample_to_population(self, sample_column):
         """
         Compare a sample's expression to the population mean.

@@ -6,6 +6,8 @@ import logging
 import pandas as pd
 
 from coords import read_coordinate_data
+from stats import calculate_population_metrics
+from stats import filter_outliers_by_sample
 
 
 class ExpressionAnalysis:
@@ -77,7 +79,7 @@ class ExpressionAnalysis:
         return self.gene_data[(self.gene_data['seqname'] == chromosome) & (self.gene_data['start'] >= start) &
                               (self.gene_data['end'] <= end)]
 
-    def subset_by_range(self, coordinate_ranges, padding_left=0, padding_right=0):
+    def subset_by_range(self, coordinate_ranges: list, padding_left=0, padding_right=0):
         """
         Obtain a single DataFrame of data to the left and right of specified coordinates,
         removing any duplicates.
@@ -106,22 +108,8 @@ class ExpressionAnalysis:
         unique_subsets = all_subsets.drop_duplicates().reset_index(drop=True)
         return unique_subsets
 
-        def calculate_population_mean(self):
-            """
-            Calculate the mean expression across all samples and add it to the data.
 
-            This method assumes that gene expression columns are before the 'seqname' column.
-            Adds a new column 'population_mean' to the data with the calculated means.
-            """
-            try:
-                # Assumes gene expression columns are the numeric columns before 'seqname'
-                expression_data = self.gene_data.select_dtypes(include=[float, int])
-                self.gene_data['population_mean'] = expression_data.mean(axis=1)
-            except KeyError:
-                raise ValueError("Expected 'seqname' column not found in data.")
-
-
-# """Early Testing"""
+"""Early Testing"""
 
 if __name__ == "__main__":
     gene_data_path = "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/medullo_rnaseq_annotated.csv"
@@ -129,4 +117,13 @@ if __name__ == "__main__":
     coord_list = read_coordinate_data(
         "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/MB174_HiSV_inter_SV_result.txt")
     exp = ExpressionAnalysis(gene_data_path, chr_path)
-    print(f"Coord Test:{exp.subset_by_range(coord_list[0],padding_left=200000)}")
+    gene_subset = exp.subset_by_range(coord_list, padding_left=200000)
+    sample_list = [
+        'MB095', 'MB106', 'MB170', 'MB226', 'MB247', 'MB248', 'MB260', 'MB164', 'MB166', 'MB271', 'MB277', 'MB278', 'MB288',
+        'MB091', 'MB099', 'MB118', 'MB174', 'MB177', 'MB199', 'MB227', 'MB264', 'MB265', 'MB269', 'MB270', 'MB281', 'MB102',
+        'MB104', 'MB234', 'MB239', 'MB244', 'MB268', 'MB274', 'MB275', 'MB284', 'MB088', 'MB136', 'MB206', 'MB266'
+    ]
+    genes_with_mean = calculate_population_metrics(gene_subset, "MB")
+    gene_subset.to_csv
+    # outliers = filter_outliers_by_sample(genes_with_mean, sample_name="MB174")
+    # outliers.to_csv("MB174.csv", index=False)
