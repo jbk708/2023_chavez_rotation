@@ -4,6 +4,7 @@ import pandas as pd
 
 
 def calculate_population_metrics(data: pd.DataFrame, sample_prefix="MB"):
+    # TODO: Fix calculate_population_metrics to better recognize sample columns
     """
     Calculate the mean and standard deviation of expression across all prefixed sample columns and add it to the data.
 
@@ -29,6 +30,7 @@ def calculate_population_metrics(data: pd.DataFrame, sample_prefix="MB"):
     data['expression_std'] = data[columns].std(axis=1)
 
     return data
+
 
 def filter_outliers_by_sample(data: pd.DataFrame, sample_name: str):
     """
