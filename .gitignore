@@ -166,3 +166,9 @@ cython_debug/
 
 /scratch
 /bin
+analysis/RNAseq/dkfz_RNAseq_v2_rsem_genes_counts.genesymbol.nodup.renamed.norm.txt
+.gitignore
+analysis/RNAseq/dkfz_RNAseq_v2_rsem_genes_counts.genesymbol.nodup.renamed.txt
+analysis/RNAseq/MB102_GRCh38.bw
+analysis/RNAseq/MB174_rnaseq.bw
+.DS_Store
