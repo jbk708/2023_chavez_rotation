@@ -12,16 +12,7 @@ from stats import filter_outliers_by_sample
 
 def queue_samples(sample_list: list, sample_folder: str, gene_data_path: str, chr_path: str, outpath: str):
     """
-    Inititates sample queue for expression analysis.
-
-    NOTES:
-        As of this iteration:
-        * The padding is set to look up and down stream 2MB from the breakpoint of the first gene coordinate.
-        Refer to subset_by_range() to tweak these settings.
-        * calculate_population_metrics() is expecting the header of each sample in the RNAseq file to be
-        "MB" (IE MB102). If your sample names are different, please change this, or update your samples to
-        have the same initial sample header.
-
+    Initiates sample queue for expression analysis.
 
     Args:
         sample_list (list): List of sample names to be processed
@@ -36,12 +27,22 @@ def queue_samples(sample_list: list, sample_folder: str, gene_data_path: str, ch
     """
 
     for sample in sample_list:
-        coord_list = read_coordinate_data(f"{sample_folder}/{sample}_inter_SV_result.txt")
-        exp = ExpressionAnalysis(gene_data_path, chr_path)
-        gene_subset = exp.subset_by_range(coord_list, padding_left=2000000)
-        genes_with_mean = calculate_population_metrics(gene_subset, "MB")
-        outliers = filter_outliers_by_sample(genes_with_mean, sample_name="MB174")
-        outliers.to_csv(f"{outpath}/{sample}_genes.csv", index=False)
+        try:
+            coord_list = read_coordinate_data(f"{sample_folder}/{sample}_HiSV_inter_SV_result.txt")
+        except FileNotFoundError:
+            print(f"Coordinate file for sample {sample} not found. Skipping this sample.")
+            continue
+
+        try:
+            exp = ExpressionAnalysis(gene_data_path, chr_path)
+            gene_subset = exp.subset_by_range(coord_list, padding_left=2000000)
+            genes_with_mean = calculate_population_metrics(gene_subset, "MB")
+            outliers = filter_outliers_by_sample(genes_with_mean, sample_name="MB174")
+            outliers.to_csv(f"{outpath}/{sample}_genes.csv", index=False)
+        except Exception as e:
+            print(f"An error occurred while processing sample {sample}: {e}")
+            continue
+
 
 
 class ExpressionAnalysis:
@@ -146,17 +147,26 @@ class ExpressionAnalysis:
 """Early Testing"""
 
 if __name__ == "__main__":
-    gene_data_path = "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/medullo_rnaseq_annotated.csv"
-    chr_path = "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/hg38_no_M.len"
-    coord_list = read_coordinate_data(
-        "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/MB174_HiSV_inter_SV_result.txt")
-    exp = ExpressionAnalysis(gene_data_path, chr_path)
-    gene_subset = exp.subset_by_range(coord_list, padding_left=200000)
     sample_list = [
-        'MB095', 'MB106', 'MB170', 'MB226', 'MB247', 'MB248', 'MB260', 'MB164', 'MB166', 'MB271', 'MB277', 'MB278', 'MB288',
-        'MB091', 'MB099', 'MB118', 'MB174', 'MB177', 'MB199', 'MB227', 'MB264', 'MB265', 'MB269', 'MB270', 'MB281', 'MB102',
-        'MB104', 'MB234', 'MB239', 'MB244', 'MB268', 'MB274', 'MB275', 'MB284', 'MB088', 'MB136', 'MB206', 'MB266'
+        'MB102',
+        'MB106',
+        'MB164',
+        'MB174',
+        'MB199',
+        'MB227',
+        'MB234',
+        'MB244',
+        'MB248',
+        'MB264',
+        'MB268',
+        'MB274',
+        'MB277'
     ]
-    genes_with_mean = calculate_population_metrics(gene_subset, "MB")
-    # outliers = filter_outliers_by_sample(genes_with_mean, sample_name="MB174")
-    # outliers.to_csv("MB174.csv", index=False)
+
+    queue_samples(
+        sample_list,
+        "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/inter_sv_data",
+        "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/medullo_rnaseq_annotated.csv",
+        "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/hg38_no_M.len",
+        "/Users/jkirkland/2023_chavez_rotation/analysis/expression_analysis/data/gene_data"
+    )

@@ -1,0 +1,8 @@
+# file manifest
+
+dkfz_RNAseq_v2_rsem_genes_counts.genesymbol.nodup.renamed.txt
+	Raw counts of gene expression data, processed from RNA-seq using RSEM and featurecounts. Clarence Mah 2017.
+dkfz_RNAseq_v2_rsem_genes_counts.genesymbol.nodup.renamed.norm.txt
+	TPM normalized counts of the same.
+sample.info.archer.txt
+	Sample and patient metadata for samples in the Archer cohort (MB*).
