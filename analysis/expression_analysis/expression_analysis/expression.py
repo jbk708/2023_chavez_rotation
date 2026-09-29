@@ -37,7 +37,7 @@ def queue_samples(sample_list: list, sample_folder: str, gene_data_path: str, ch
             exp = ExpressionAnalysis(gene_data_path, chr_path)
             gene_subset = exp.subset_by_range(coord_list, padding_left=2000000)
             genes_with_mean = calculate_population_metrics(gene_subset, "MB")
-            outliers = filter_outliers_by_sample(genes_with_mean, sample_name="MB174")
+            outliers = filter_outliers_by_sample(genes_with_mean, sample_name=sample)
             outliers.to_csv(f"{outpath}/{sample}_genes.csv", index=False)
         except Exception as e:
             print(f"An error occurred while processing sample {sample}: {e}")
